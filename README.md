@@ -99,3 +99,62 @@ class Solution {
 ```
 - In this code for each second we take the maximum numbered gifts and left the sqrt of that gift. For finding the maximum we use priority queue for this and also find the sum.
 - Then Before the k become zero get the maximum element from the queue and remove the element from the sum find the sqrt and put the sqrt in the queue as well as the sum finally return the sum.
+### 1792. Maximum Average Pass Ratio
+[Leetcode link](https://leetcode.com/problems/maximum-average-pass-ratio/?envType=daily-question&envId=2024-12-15)
+<br>
+There is a school that has classes of students and each class will be having a final exam. You are given a 2D integer array classes, where classes[i] = [passi, totali]. You know beforehand that in the ith class, there are totali total students, but only passi number of students will pass the exam. You are also given an integer extraStudents. There are another extraStudents brilliant students that are guaranteed to pass the exam of any class they are assigned to. You want to assign each of the extraStudents students to a class in a way that maximizes the average pass ratio across all the classes. The pass ratio of a class is equal to the number of students of the class that will pass the exam divided by the total number of students of the class. The average pass ratio is the sum of pass ratios of all the classes divided by the number of the classes. Return the maximum possible average pass ratio after assigning the extraStudents students. Answers within 10-5 of the actual answer will be accepted.
+
+Example 1:
+Input: classes = [[1,2],[3,5],[2,2]], extraStudents = 2
+Output: 0.78333
+Explanation: You can assign the two extra students to the first class. The average pass ratio will be equal to (3/4 + 3/5 + 2/2) / 3 = 0.78333.
+
+Example 2:
+Input: classes = [[2,4],[3,9],[4,5],[2,10]], extraStudents = 4
+Output: 0.53485
+
+Constraints:
+1 <= classes.length <= 105
+classes[i].length == 2
+1 <= passi <= totali <= 105
+1 <= extraStudents <= 105
+
+```java
+class Solution {
+    public double find(double a,double b)
+    {
+        double d1 = (double)a/b;
+        double d2 = (double)(a+1)/(b+1);
+        return (d2-d1);
+    }
+    public double maxAverageRatio(int[][] classes, int extraStudents) {
+        PriorityQueue<double[]> pq = new PriorityQueue<>((a,b)->Double.compare(b[2],a[2]));
+        double ans = 0;
+        for(int i=0;i<classes.length;i++)
+        {
+            pq.add(new double[]{classes[i][0],classes[i][1],find(classes[i][0],classes[i][1])});
+        }
+        while(extraStudents>0)
+        {
+            double[] arr = pq.poll();
+            pq.add(new double[]{arr[0]+1.0,arr[1]+1.0,find(arr[0]+1.0,arr[1]+1.0)});
+            extraStudents--;
+        } 
+        while(!pq.isEmpty())
+        {
+            double[] arr = pq.poll();
+            ans+=(arr[0]/arr[1]);
+        }
+        return ans/classes.length;
+    }
+}
+```
+- The question say that add the extra students to any one of the class we get the maximum pass ratio.(Pass ration is defined above).
+- So The idea behind is first we take all the maximum gain that is the old pass ratio and after adding one students the pass ratio find the difference between them give the gain.
+- We always take the maximum gain so we increase our pass ratio.
+- So in the queue push the first element second element and the gain as a array.
+- Then take the top element beacause that give the maximum gain.
+- Then push the changed value that is plus one value and find the gain for the plus one value and push to the queue.
+- Do the same thing for the all extra students then find the pass ratio and add to the ans.
+- Then return the ans by its length of the class array that is total number of class.
+> [REference](https://www.youtube.com/watch?v=Oxry5tB0UQM)
